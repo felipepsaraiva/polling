@@ -22,10 +22,13 @@
   "homepage": "https://github.com/felipepsaraiva/polling#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
     "dotenv": "^4.0.0",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
-    "express-session": "^1.15.6",
+    "helmet": "^3.9.0",
+    "jwt-simple": "^0.5.1",
     "mongoose": "^4.13.7",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0"
