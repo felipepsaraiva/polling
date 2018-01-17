@@ -3,6 +3,21 @@
 const passport = require('passport');
 const jwt = require('jwt-simple');
 
+module.exports.requireAuth = function(req, res, next) {
+  if (!req.user) {
+    next({
+      status: 401,
+      name: 'Custom',
+      response: {
+        error: 'AuthenticationError',
+        message: 'You have to be authenticated to perform this action'
+      }
+    });
+  } else {
+    next();
+  }
+}
+
 module.exports.login = function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err)
@@ -11,8 +26,9 @@ module.exports.login = function(req, res, next) {
     if (!user)
       return next({
         status: 422,
+        name: 'Custom',
         response: {
-          error: true,
+          error: 'AuthenticationError',
           message: info.message
         }
       });
@@ -22,7 +38,7 @@ module.exports.login = function(req, res, next) {
     res.json({
       error: false,
       message: 'Success',
-      user: user.publicInfo(),
+      user: user.getPublic(),
       token: token
     });
   })(req, res, next);

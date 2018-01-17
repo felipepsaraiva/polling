@@ -22,6 +22,7 @@ const User = require('./models/User');
 /**
  * Connect to MongoDB
 */
+mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URI);
 mongoose.connection.on('error', function() {
   console.error('Unable to connect to MongoDB');
@@ -43,11 +44,10 @@ app.use('/assets', express.static(path.join(__dirname, 'public')));
 
 // Authenticate the request
 app.use(function(req, res, next) {
-  let token = req.get('Access-Header') || req.cookies.token;
-
-  if (token) {
+  try {
+    let token = req.get('Access-Header') || req.cookies.token;
     let id = jwt.decode(token, process.env.SECRET).id;
-    
+
     User.findById(id, function(err, user) {
       if (user)
         req.user = user;
@@ -56,7 +56,7 @@ app.use(function(req, res, next) {
 
       next();
     });
-  } else {
+  } catch (e) {
     next();
   }
 });
