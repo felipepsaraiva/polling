@@ -10,16 +10,11 @@ const poll = require('./poll');
 
 router.post('/login', auth.login);
 
-router.get('/encode/:id', function(req, res, next) {
-  const common = require('../config/common');
-  res.json({ id: common.encodeId(req.params.id) });
-});
-
 router.get('/me', auth.requireAuth, user.self.read);
-// router.put('/me', auth.requireAuth, user.self.update);
-// router.delete('/me', auth.requireAuth, user.self.delete);
-// router.put('/me/password', auth.requireAuth, user.self.changePassword);
-// router.get('/me/polls', auth.requireAuth, user.self.polls);
+router.put('/me', auth.requireAuth, user.self.update);
+router.delete('/me', auth.requireAuth, user.self.delete);
+router.put('/me/password', auth.requireAuth, user.self.changePassword);
+router.get('/me/polls', auth.requireAuth, user.self.polls);
 
 router.post('/user', user.create);
 router.get('/user/:aid', user.read);
@@ -33,6 +28,17 @@ router.put('/poll/:aid/vote/:optionid', poll.vote);
 router.post('/poll/:aid/vote', auth.requireAuth, poll.voteNewOption);
 
 /**
+ * Helper API Routes
+ */
+router.get('/encode/:id', function(req, res, next) {
+  res.json({ aid: common.encodeId(req.params.id) });
+});
+
+router.get('/decode/:aid', function(req, res, next) {
+  res.json({ id: common.decodeId(req.params.aid) });
+});
+
+/**
  * ERROR HANDLER
  * Error types: ServerError, AuthenticationError, ValidationError, InvalidIdError
  */
@@ -41,6 +47,7 @@ router.use(function(err, req, res, next) {
     case 'ValidationError':
       res.status(422).json({
         error: err.name,
+        message: err._message,
         errorList: common.extractErrors(err.errors)
       });
       break;

@@ -56,21 +56,27 @@ UserSchema.path('username').validate(function(value) {
 }, 'Start username with a letter and use only alphanumeric characters, underscores or dots');
 
 UserSchema.path('email').validate(function(value) {
-  return new Promise((resolve, reject) => {
-    this.model('User').count({ email: value }, function(err, count) {
-      if (err) return reject(err);
-      resolve(!count);
+  if (this.isNew || this.isModified('email'))
+    return new Promise((resolve, reject) => {
+      this.model('User').count({ email: value }, function(err, count) {
+        if (err) return reject(err);
+        resolve(!count);
+      });
     });
-  });
+
+  return true;
 }, 'Email already exists');
 
 UserSchema.path('username').validate(function(value) {
-  return new Promise((resolve, reject) => {
-    this.model('User').count({ username: value }, function(err, count) {
-      if (err) return reject(err);
-      resolve(!count);
+  if (this.isNew || this.isModified('username'))
+    return new Promise((resolve, reject) => {
+      this.model('User').count({ username: value }, function(err, count) {
+        if (err) return reject(err);
+        resolve(!count);
+      });
     });
-  });
+
+  return true;
 }, 'Username already exists');
 
 /**
