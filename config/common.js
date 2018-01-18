@@ -80,10 +80,12 @@ module.exports.getProperties = getProperties;
 /**
  * extractErrors - Extract error's messages from the ValidationError object
  */
-module.exports.extractErrors = function(errors, msgs = {}) {
+module.exports.extractErrors = function(errors, msgs = []) {
   Object.keys(errors).forEach((path) => {
-    if (!msgs[path])
-      msgs[path] = errors[path].message;
+    msgs.push({
+      path: path,
+      message: errors[path].message
+    });
   });
   return msgs;
 };
