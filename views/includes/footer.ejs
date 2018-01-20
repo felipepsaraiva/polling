@@ -1,0 +1,30 @@
+
+  <% if (locals.bodyFooter !== false) { %>
+    <footer class="bg-dark text-light">
+      <div class="container py-4">
+        <div class="row align-items-center">
+          <div class="col mb-2 mb-sm-0">
+            <p class="m-0 text-center text-sm-left">
+              Made with <i class="fa fa-heart-o"></i>  by <a class="text-warning" href="https://codepen.io/felipepsaraiva/full/bpLojE">felipepsaraiva</a>. &copy; <%- new Date().getFullYear() %>
+            </p>
+          </div>
+
+          <div class="col-sm-auto">
+            <p class="m-0 text-center">
+              <a class="text-light mx-1" href="https://github.com/felipepsaraiva"><i class="fa fa-github fa-2x"></i></a>
+              <a class="text-light mx-1" href="https://gitlab.com/felipepsaraiva"><i class="fa fa-gitlab fa-2x"></i></a>
+              <a class="text-light mx-1" href="https://www.freecodecamp.com/felipepsaraiva"><i class="fa fa-free-code-camp fa-2x"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  <% } %>
+
+    <% if (locals.scripts) {
+      for (let file of scripts) { %>
+        <script src="/assets/js/<%- file %>.js"  charset="utf-8"></script>
+    <%  }
+    }%>
+  </body>
+</html>

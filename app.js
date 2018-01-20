@@ -17,6 +17,7 @@ const express = require('express');
 const app = express();
 
 const api = require('./api');
+const webClientRoutes = require('./routes');
 const User = require('./models/User');
 
 /**
@@ -62,9 +63,7 @@ app.use(function(req, res, next) {
 });
 
 app.use('/api', cors(), api);
-app.get('/', function(req, res) {
-  res.render('index', { user: req.user });
-});
+app.use('/', webClientRoutes);
 
 app.listen(app.get('port'), function() {
   console.log('App is running on port ' + app.get('port') + '...');
