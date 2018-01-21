@@ -10,7 +10,11 @@ const common = require('../config/common');
 module.exports.self = {};
 
 module.exports.self.read = function(req, res, next) {
-  res.json(req.user.getPublic());
+  res.json({
+    error: false,
+    message: 'Success',
+    user: req.user.getPublic()
+  });
 };
 
 /**
@@ -25,14 +29,13 @@ module.exports.self.update = function(req, res, next) {
   if (req.body.username)
     req.user.username = req.body.username;
 
-  req.user.save(function(err, user) {
-    if (err) return next(err);
+  req.user.save().then(function(user) {
     res.json({
       error: false,
       message: 'Information updated successfully',
       user: user.getPublic()
     });
-  });
+  }).catch(next);
 };
 
 module.exports.self.delete = function(req, res, next) {
@@ -41,7 +44,7 @@ module.exports.self.delete = function(req, res, next) {
   }).then(function() {
     res.json({
       error: false,
-      message: 'User deleted successfully'
+      message: 'Account deleted successfully'
     });
   }).catch(next);
 };
@@ -63,13 +66,12 @@ module.exports.self.changePassword = function(req, res, next) {
     });
 
   req.user.password = req.body.newPassword;
-  req.user.save(function(err, user) {
-    if (err) return next(err);
+  req.user.save().then(function(user) {
     res.json({
       error: false,
       message: 'Password updated successfully'
     });
-  });
+  }).catch(next);
 };
 
 /**
@@ -90,14 +92,13 @@ module.exports.self.polls = function(req, res, next) {
     }
   }
 
-  query.exec(function(err, polls) {
-    if (err) return next(err);
+  query.exec().then(function(polls) {
     res.json({
       error: false,
       message: 'Fetched ' + polls.length + ' poll(s)',
       polls: polls.map((poll) => poll.getPublic())
     });
-  });
+  }).catch(next);
 };
 
 
@@ -118,27 +119,27 @@ module.exports.create = function(req, res, next) {
     password: req.body.password
   });
 
-  user.save(function(err, user) {
-    if (err) return next(err);
-
+  user.save().then(function(user) {
     res.json({
       error: false,
       message: 'User registered successfully',
       user: user.getPublic()
-    })
-  });
+    });
+  }).catch(next);
 };
 
 module.exports.read = function(req, res, next) {
   let id = common.decodeId(req.params.aid);
-  if (!id)
-    return sendInvalidId(next);
+  if (!id) return next(new InvalidIdError);
 
-  User.findById(id, function(err, user) {
-    if (err) return next(err);
-    if (!user) return sendInvalidUsername(next);
-    res.json(user.getPublic());
-  });
+  User.findById(id).exec().then(function(user) {
+    if (!user) throw new InvalidIdError;
+    res.json({
+      error: false,
+      message: 'Success',
+      user: user.getPublic()
+    });
+  }).catch(next);
 };
 
 /**
@@ -148,8 +149,7 @@ module.exports.read = function(req, res, next) {
  */
 module.exports.polls = function(req, res, next) {
   let id = common.decodeId(req.params.aid);
-  if (!id)
-    return sendInvalidId(next);
+  if (!id) return next(new InvalidIdError);
 
   let query = Poll.find({ author: id });
 
@@ -163,27 +163,24 @@ module.exports.polls = function(req, res, next) {
     }
   }
 
-  query.exec(function(err, polls) {
-    if (err) return next(err);
+  query.exec().then(function(polls) {
     res.json({
       error: false,
       message: 'Fetched ' + polls.length + ' poll(s)',
       polls: polls.map((poll) => poll.getPublic())
     });
-  });
+  }).catch(next);
 };
 
 
 /**
  * Helper Functions
  */
-function sendInvalidId(next, message = 'There is no user with the ID provided') {
-  next({
-    status: 422,
-    name: 'Custom',
-    response: {
-      error: 'InvalidIdError',
-      message: message
-    }
-  });
+function InvalidIdError(message = 'There is no user with the ID provided') {
+  this.status = 422;
+  this.name = 'Custom';
+  this.response = {
+    error: 'InvalidIdError',
+    message: message
+  };
 }

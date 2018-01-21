@@ -9,19 +9,16 @@ const common = require('../config/common');
  */
 module.exports.read = function(req, res, next) {
   let id = common.decodeId(req.params.aid);
-  if (!id)
-    return sendInvalidId(next);
+  if (!id) return next(new InvalidIdError);
 
   let query = Poll.findById(id);
   if (req.query.author)
     query = query.populate('author');
 
-  query.exec(function(err, poll) {
-    if (err) return next(err);
-    if (!poll) return sendInvalidId(next);
-
+  query.exec().then(function(poll) {
+    if (!poll) throw new InvalidIdError;
     res.json(poll.getPublic());
-  });
+  }).catch(next);
 };
 
 /**
@@ -46,16 +43,13 @@ module.exports.create = function(req, res, next) {
     poll.markModified('options');
   }
 
-  poll.save(function(err, poll) {
-    if (err)
-      return next(err);
-
+  poll.save().then(function(poll) {
     res.json({
       error: false,
       message: 'Poll created successfully',
       poll: poll.getPublic()
     });
-  });
+  }).catch(next);
 };
 
 /**
@@ -66,12 +60,10 @@ module.exports.create = function(req, res, next) {
  */
 module.exports.update = function(req, res, next) {
   let id = common.decodeId(req.params.aid);
-  if (!id)
-    return sendInvalidId(next);
+  if (!id) return next(new InvalidIdError);
 
-  Poll.findAuthorsPoll(id, req.user.id, function(err, poll) {
-    if (err) return next(err);
-    if (!poll) return sendInvalidId(next);
+  Poll.findAuthorsPoll(id, req.user.id).then(function(poll) {
+    if (!poll) throw new InvalidIdError;
 
     if (req.body.name)
       poll.name = req.body.name;
@@ -94,67 +86,56 @@ module.exports.update = function(req, res, next) {
       poll.markModified('options');
     }
 
-    poll.save(function(err, polldoc) {
-      if (err) return next(err);
-
-      res.json({
-        error: false,
-        message: 'Poll updated successfully',
-        poll: polldoc.getPublic()
-      });
+    return poll.save();
+  }).then(function(poll) {
+    res.json({
+      error: false,
+      message: 'Poll updated successfully',
+      poll: poll.getPublic()
     });
-  });
+  }).catch(next);
 };
 
 module.exports.delete = function(req, res, next) {
   let id = common.decodeId(req.params.aid);
-  if (!id)
-    return sendInvalidId(next);
+  if (!id) return next(new InvalidIdError);
 
-  Poll.findAuthorsPoll(id, req.user.id, function(err, poll) {
-    if (err) return next(err);
-    if (!poll) return sendInvalidId(next);
-
-    Poll.findByIdAndRemove(id, function(err) {
-      if (err) return next(err);
-      res.json({
-        error: false,
-        message: 'Poll deleted successfully'
-      });
+  Poll.findAuthorsPoll(id, req.user.id).then(function(poll) {
+    if (!poll) throw new InvalidIdError;
+    return poll.remove();
+  }).then(function(poll) {
+    res.json({
+      error: false,
+      message: 'Poll deleted successfully'
     });
-  });
+  }).catch(next);
 };
 
 module.exports.vote = function(req, res, next) {
   let id = common.decodeId(req.params.aid);
+  if (!id) return next(new InvalidIdError);
+
   let optionid = common.decodeId(req.params.optionid);
-
-  if (!id)
-    return sendInvalidId(next);
   if (!optionid)
-    return sendInvalidId(next, 'The ID provided for the option is invalid');
+    return next(new InvalidIdError('There is no option with the ID provided'));
 
-  Poll.findById(id, function(err, poll) {
-    if (err) return next(err);
-    if (!poll) return sendInvalidId(next);
+  Poll.findById(id).exec().then(function(poll) {
+    if (!poll) throw new InvalidIdError;
 
     let option = poll.options.find((option) => option.id === optionid);
-    if (option) {
-      option.votes++;
-      poll.markModified('options');
+    if (!option)
+      throw new InvalidIdError('There is no option with the ID provided');
 
-      poll.save(function(err, polldoc) {
-        if (err) return next(err);
-
-        res.json({
-          error: false,
-          message: 'Vote computed successfully'
-        });
-      });
-    } else {
-      sendInvalidId(next, 'There is no option with the ID provided');
-    }
-  });
+    option.votes++;
+    poll.markModified('options');
+    return poll.save();
+  }).then(function(poll) {
+    res.json({
+      error: false,
+      message: 'Vote computed successfully',
+      poll: poll.getPublic()
+    });
+  }).catch(next);
 };
 
 /**
@@ -163,50 +144,46 @@ module.exports.vote = function(req, res, next) {
  */
 module.exports.voteNewOption = function(req, res, next) {
   let id = common.decodeId(req.params.aid);
-  if (!id)
-    return sendInvalidId(next);
+  if (!id) return next(new InvalidIdError);
 
-  Poll.findById(id, function(err, poll) {
-    if (err) return next(err);
-    if (!poll) return sendInvalidId(next);
+  Poll.findById(id).exec().then(function(poll) {
+    if (!poll) throw new InvalidIdError;
 
-    if (!poll.allowNewOptions)
-      return next({
+    if (!poll.allowNewOptions) {
+      throw {
         status: 403,
         name: 'Custom',
         response: {
           error: 'AuthenticationError',
           message: 'The poll does not allow the creation of new options'
         }
-      });
+      };
+    }
 
     let option = { description: req.body.option, votes: 1 };
     poll.options.push(option);
+
     poll.markModified('options');
-
-    poll.save(function(err) {
-      if (err) return next(err);
-
-      res.json({
-        error: false,
-        message: 'Option created successfully'
-      });
+    return poll.save();
+  }).then(function(poll) {
+    res.json({
+      error: false,
+      message: 'Option created successfully',
+      poll: poll.getPublic()
     });
-  });
+  }).catch(next);
 };
 
 
 
 /**
- * Helper Functions
+ * InvalidIdError (constructor)
  */
-function sendInvalidId(next, message = 'There is no poll with the ID provided') {
-  next({
-    status: 422,
-    name: 'Custom',
-    response: {
-      error: 'InvalidIdError',
-      message: message
-    }
-  });
+function InvalidIdError(message = 'There is no poll with the ID provided') {
+  this.status = 422;
+  this.name = 'Custom';
+  this.response = {
+    error: 'InvalidIdError',
+    message: message
+  };
 }
