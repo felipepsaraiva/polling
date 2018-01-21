@@ -59,23 +59,21 @@ PollSchema.methods.getPublic = function() {
 /**
  * Static Methods
  */
-PollSchema.statics.findAuthorsPoll = function(pollId, authorId, callback) {
-  this.findById(pollId, function(err, poll) {
-    if (err) return callback(err);
-    if (!poll) return callback(null, null);
-
-    if (authorId !== poll.author.toString('hex')) {
-      callback({
-        status: 403,
-        name: 'Custom',
-        response: {
-          error: 'AuthenticationError',
-          message: 'You are not the author of this poll'
-        }
-      });
-    } else {
-      callback(null, poll);
-    }
+PollSchema.statics.findAuthorsPoll = function(pollId, authorId) {
+  return new Promise((resolve, reject) => {
+    this.findById(pollId).exec().then(function(poll) {
+      if (!poll || (authorId === poll.author.toString('hex')))
+        resolve(poll);
+      else
+        reject({
+          status: 403,
+          name: 'Custom',
+          response: {
+            error: 'AuthenticationError',
+            message: 'You are not the author of this poll'
+          }
+        });
+    }).catch(reject);
   });
 };
 
