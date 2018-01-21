@@ -36,13 +36,14 @@ module.exports.self.update = function(req, res, next) {
 };
 
 module.exports.self.delete = function(req, res, next) {
-  User.findByIdAndRemove(req.user.id, function(err) {
-    if (err) return next(err);
+  req.user.remove().then(function(user) {
+    return Poll.remove({ author: user.id }).exec();
+  }).then(function() {
     res.json({
       error: false,
       message: 'User deleted successfully'
     });
-  });
+  }).catch(next);
 };
 
 /**
