@@ -10,8 +10,15 @@
           Polling
         </h1>
 
-        <!-- <p class="text-center">Vote on all kinds of polls and create your own.</p> -->
-        <p class="text-center"><a href="/register" class="btn btn-warning btn-lg">Join now</a></p>
+        <p class="text-center">
+          <% if (locals.user) { %>
+            <a href="#" class="btn btn-warning btn-lg">
+              <i class="fa fa-plus"></i> New Poll
+            </a>
+          <% } else { %>
+            <a href="/register" class="btn btn-warning btn-lg">Join now</a>
+          <% } %>
+        </p>
       </div>
     </div>
   </div>

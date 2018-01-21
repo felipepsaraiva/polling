@@ -1,0 +1,50 @@
+<%- include('includes/header', { title: 'Sign up' }) %>
+<%- include('includes/navbar', { user: user }) %>
+
+<main id="page-register" class="container py-5">
+  <div class="row justify-content-center my-3">
+    <div class="col-md-8 col-lg-7 col-xl-6">
+      <h1 class="text-center mb-3">Sign up</h1>
+
+      <div class="d-none alert alert-success text-center" role="alert">
+        Successfully registered! Now you can <a href="/login" class="alert-link">sign in</a>.
+      </div>
+
+      <form>
+        <div class="form-group" id="email">
+          <label for="email-input" class="font-weight-bold">Email:</label>
+          <input type="text" id="email-input" class="form-control">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group" id="username">
+          <label for="username-input" class="font-weight-bold">Username:</label>
+          <input type="text" id="username-input" class="form-control">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group" id="password">
+          <label for="password-input" class="font-weight-bold">Password:</label>
+          <input type="password" id="password-input" class="form-control">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group" id="rpassword">
+          <label for="rpassword-input" class="font-weight-bold">Repeat Password:</label>
+          <input type="password" id="rpassword-input" class="form-control">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <button type="submit" class="btn btn-warning btn-lg d-block mx-auto">
+          <i class="fa fa-user-plus"></i> Sign up
+        </button>
+
+        <button type="button" class="d-none btn btn-warning btn-lg mx-auto" disabled>
+          <i class="fa fa-spinner fa-pulse"></i> Signing up...
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('includes/footer', { scripts: ['register'] }) %>

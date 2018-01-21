@@ -1,26 +1,30 @@
 $(function() {
+  var request;
+
   $('form').submit(function(e) {
     e.preventDefault();
-    let data = {
-      username: $('#username input').val(),
-      password: $('#password input').val()
-    };
 
-    $.ajax({
-      type: 'POST',
-      url: '/api/login',
-      contentType: 'application/json',
-      data: JSON.stringify(data),
-      success: function(result) {
-        Cookies.set('token', result.token);
+    if (!request) {
+      $('button').toggleClass('d-none');
+      $('#error-message').addClass('d-none');
+
+      request = $.ajax({
+        type: 'POST',
+        url: '/api/login',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          username: $('#username input').val(),
+          password: $('#password input').val()
+        })
+      }).done(function(response) {
+        Cookies.set('token', response.token);
         window.location = '/';
-      },
-      error: function(xhr, status, error) {
-        if (xhr.responseJSON) {
-          $('#password p').text(xhr.responseJSON.message);
-          $('#password p').removeClass('d-none');
-        }
-      }
-    });
+      }).fail(function(xhr, status) {
+        $('#error-message').text(xhr.responseJSON.message);
+        $('#error-message').removeClass('d-none');
+        $('button').toggleClass('d-none');
+        request = null;
+      });
+    }
   });
 });

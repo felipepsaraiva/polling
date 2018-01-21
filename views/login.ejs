@@ -1,6 +1,6 @@
-<%- include('includes/header', { css: ['login'] }) %>
+<%- include('includes/header', { title: 'Sign in', css: ['login'] }) %>
 
-<main id="page-login">
+<main id="page-login" class="container-fluid">
   <div class="row align-items-center justify-content-center m-0">
     <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3 text-center my-5">
       <a href="/" class="no-decoration-link">
@@ -19,11 +19,15 @@
         <div class="form-group" id="password">
           <label for="password-input" class="sr-only">Password</label>
           <input type="password" id="password-input" class="form-control" placeholder="Password">
-          <p class="d-none text-danger text-right"></p>
+          <p id="error-message" class="d-none text-danger text-right"></p>
         </div>
 
         <button type="submit" class="btn btn-warning btn-block">
-          <i class="fa fa-sign-in"></i> Sign In
+          <i class="fa fa-sign-in"></i> Sign in
+        </button>
+
+        <button type="button" class="d-none btn btn-warning btn-block" disabled>
+          <i class="fa fa-spinner fa-pulse"></i> Signing in...
         </button>
       </form>
     </div>
