@@ -36,4 +36,11 @@ router.get('/register', function(req, res, next) {
   res.render('register', { user: req.user });
 });
 
+router.get('/settings', function(req, res, next) {
+  if (!req.user)
+    return res.redirect('/');
+
+  res.render('settings', { user: req.user });
+});
+
 module.exports = router;

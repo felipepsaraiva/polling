@@ -6,7 +6,6 @@ $(function() {
 
     if (!request) {
       $('.form-group input').removeClass('is-valid is-invalid');
-      $('.form-group .invalid-feedback').text('');
       $('.alert').addClass('d-none');
 
       var data = {
