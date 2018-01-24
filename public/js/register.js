@@ -18,7 +18,7 @@ $(function() {
         $('#rpassword .invalid-feedback').text('Must match the password');
         $('#rpassword input').addClass('is-invalid');
       } else {
-        $('button').toggleClass('d-none d-block');
+        $('#page-register button').toggleClass('d-none d-block');
 
         request = $.ajax({
           type: 'POST',
@@ -27,7 +27,7 @@ $(function() {
           data: JSON.stringify(data)
         }).always(function() {
           request = null;
-          $('button').toggleClass('d-none d-block');
+          $('#page-register button').toggleClass('d-none d-block');
         }).done(function(response) {
           $('form')[0].reset();
           $('.alert').removeClass('d-none');

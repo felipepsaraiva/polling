@@ -5,7 +5,7 @@ $(function() {
     e.preventDefault();
 
     if (!request) {
-      $('button').toggleClass('d-none');
+      $('#page-login button').toggleClass('d-none');
       $('#error-message').addClass('d-none');
 
       request = $.ajax({
@@ -22,7 +22,7 @@ $(function() {
       }).fail(function(xhr, status) {
         $('#error-message').text(xhr.responseJSON.message);
         $('#error-message').removeClass('d-none');
-        $('button').toggleClass('d-none');
+        $('#page-login button').toggleClass('d-none');
         request = null;
       });
     }
