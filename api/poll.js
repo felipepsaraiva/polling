@@ -1,7 +1,42 @@
 'use strict';
 
+const co = require('co');
 const Poll = require('../models/Poll');
 const common = require('../config/common');
+
+/**
+ * Query:
+ *  q: String (Optional) - Text to be searched, if empty, lists all
+ *  sort: 'recent' || 'popular'
+ *  limit: Number (Default: 10) - Limit the number of results
+ *  offset: Number (Default: 0) - Skip limit*offset results
+ */
+module.exports.search = function(req, res, next) {
+  let condition = {},
+    sort = { voteCount: -1 },
+    limit = Math.floor(req.query.limit) || 10,
+    skip = (Math.floor(req.query.offset) || 0) * limit;
+
+  if (req.query.q)
+    condition = { name: new RegExp(common.escapeRegex(req.query.q), 'i') };
+
+  if (req.query.sort === 'recent')
+    sort = { createdAt: -1 };
+
+  co(function*() {
+    return yield {
+      total: Poll.count(condition),
+      results: Poll.find(condition).sort(sort).limit(limit).skip(skip).exec()
+    };
+  }).then(function(data) {
+    res.json({
+      error: false,
+      message: 'Found ' + data.results.length + ' result(s)',
+      total: data.total,
+      polls: data.results.map((result) => result.getPublic())
+    });
+  }).catch(next);
+};
 
 /**
  * Query:

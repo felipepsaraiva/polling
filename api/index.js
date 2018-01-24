@@ -16,10 +16,12 @@ router.delete('/me', auth.requireAuth, user.self.delete);
 router.put('/me/password', auth.requireAuth, user.self.changePassword);
 router.get('/me/polls', auth.requireAuth, user.self.polls);
 
+router.get('/user/search', user.search);
 router.post('/user', user.create);
 router.get('/user/:aid', user.read);
 router.get('/user/:aid/polls', user.polls);
 
+router.get('/poll/search', poll.search);
 router.get('/poll/:aid', poll.read);
 router.post('/poll', auth.requireAuth, poll.create);
 router.put('/poll/:aid', auth.requireAuth, poll.update);
@@ -40,7 +42,7 @@ router.get('/decode/:aid', function(req, res, next) {
 
 /**
  * ERROR HANDLER
- * Error types: ServerError, AuthenticationError, ValidationError, InvalidIdError
+ * Error types: ServerError, AuthenticationError, ValidationError, InvalidIdError, BadRequest
  */
 router.use(function(err, req, res, next) {
   switch (err.name) {
