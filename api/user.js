@@ -1,5 +1,6 @@
 'use strict';
 
+const co = require('co');
 const User = require('../models/User');
 const Poll = require('../models/Poll');
 const common = require('../config/common');
@@ -105,6 +106,35 @@ module.exports.self.polls = function(req, res, next) {
 /**
  * User Routes
  */
+
+ /**
+  * Query:
+  *  q: String (Optional) - Text to be searched, if empty, lists all
+  *  limit: Number (Default: 10) - Limit the number of results
+  *  offset: Number (Default: 0) - Skip limit*offset results
+  */
+ module.exports.search = function(req, res, next) {
+   let condition = {},
+     limit = Math.floor(req.query.limit) || 10,
+     skip = (Math.floor(req.query.offset) || 0) * limit;
+
+   if (req.query.q)
+     condition = { username: new RegExp(common.escapeRegex(req.query.q), 'i') };
+
+   co(function*() {
+     return yield {
+       total: User.count(condition),
+       results: User.find(condition).sort({ username: 1 }).limit(limit).skip(skip).exec()
+     };
+   }).then(function(data) {
+     res.json({
+       error: false,
+       message: 'Found ' + data.results.length + ' result(s)',
+       total: data.total,
+       users: data.results.map((result) => result.getPublic())
+     });
+   }).catch(next);
+ };
 
 /**
  * Body:

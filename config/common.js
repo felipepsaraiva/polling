@@ -89,3 +89,10 @@ module.exports.extractErrors = function(errors, msgs = []) {
   });
   return msgs;
 };
+
+/**
+ * escapeRegex - Escape all special characters in order to use the string in the RegExp constructor
+ */
+module.exports.escapeRegex = function(str) {
+  return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
