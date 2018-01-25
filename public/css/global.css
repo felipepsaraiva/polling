@@ -2,3 +2,13 @@
 
 .font-brand { font-family: 'Grand Hotel', cursive; }
 .no-decoration-link:hover { text-decoration: none; }
+main { min-height: 90vh }
+
+.card { height: 100%; }
+.card a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}

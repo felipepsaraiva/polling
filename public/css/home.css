@@ -10,11 +10,3 @@
 .banner h1 { font-size: 5.5rem; }
 
 section { margin: 70px 0; }
-
-.card a {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}

@@ -47,6 +47,7 @@ PollSchema.methods.getPublic = function() {
   let result = common.getProperties(this, ['author', 'name', 'createdAt', 'allowNewOptions', 'voteCount', { options: ['id', 'description', 'votes'] }]);
   result.options.forEach((option) => option.id = common.encodeId(option.id));
   result.createdAt = result.createdAt.getTime();
+  result.id = this.aid;
 
   if (result.author.username) // If poll is populated
     result.author = this.author.getPublic(true);

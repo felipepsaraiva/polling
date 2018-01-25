@@ -43,4 +43,8 @@ router.get('/settings', function(req, res, next) {
   res.render('settings', { user: req.user });
 });
 
+router.get('/search', function(req, res, next) {
+  res.render('search', { user: req.user, query: req.query });
+});
+
 module.exports = router;

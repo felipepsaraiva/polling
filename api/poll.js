@@ -26,7 +26,7 @@ module.exports.search = function(req, res, next) {
   co(function*() {
     return yield {
       total: Poll.count(condition),
-      results: Poll.find(condition).sort(sort).limit(limit).skip(skip).exec()
+      results: Poll.find(condition).sort(sort).limit(limit).skip(skip).populate('author').exec()
     };
   }).then(function(data) {
     res.json({
