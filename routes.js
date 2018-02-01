@@ -5,6 +5,7 @@ const router = express.Router();
 
 const co = require('co');
 const common = require('./config/common');
+const User = require('./models/User');
 const Poll = require('./models/Poll');
 
 router.get('/', function(req, res, next) {
@@ -45,6 +46,54 @@ router.get('/settings', function(req, res, next) {
 
 router.get('/search', function(req, res, next) {
   res.render('search', { user: req.user, query: req.query });
+});
+
+router.get('/user/:uname', function(req, res, next) {
+  let uname = req.params.uname;
+
+  User.findOne({ username: uname }).populate({
+    path: 'polls',
+    options: {
+      sort: { createdAt: -1 },
+      limit: 60
+    }
+  }).exec().then(function(profile) {
+    if (profile) {
+      if (profile.polls)
+        profile.polls.sort(function(a, b) {
+          let nameA = a.name.toLowerCase();
+          let nameB = b.name.toLowerCase();
+
+          if (nameA == nameB)
+            return 0;
+          else if (nameA < nameB)
+            return -1;
+          else
+            return 1;
+        });
+
+      res.render('profile', { user: req.user, profile });
+    } else {
+      next({
+        status: 404,
+        context: 'username',
+        value: uname
+      });
+    }
+  }).catch(next);
+});
+
+// Error Handler
+router.use(function(err, req, res, next) {
+  console.log(err);
+  res.status(err.status || 500);
+  switch (err.status) {
+    case 404:
+      res.render('error-404', { user: req.user, context: err.context, value: err.value });
+
+    default:
+    res.render('error-500', { user: req.user });
+  }
 });
 
 module.exports = router;

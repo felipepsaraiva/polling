@@ -1,0 +1,32 @@
+<%- include('includes/header', { title: profile.username + '\' Profile' }) %>
+<%- include('includes/navbar', { user: user }) %>
+
+<main id="profile-page" class="container py-5">
+  <h1 class="my-4 text-center text-sm-left"><strong><%= profile.username %></strong>'s polls</h1>
+
+  <section id="polls">
+    <% if (profile.polls && profile.polls.length) { %>
+      <div class="row">
+        <% for (let poll of profile.polls) { %>
+          <div class="col-sm-6 col-md-6 col-lg-4 my-2">
+            <div class="card">
+              <a href="/poll/<%- poll.aid %>"></a>
+              <div class="card-body">
+                <h5 class="card-title"><%- poll.name %></h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                  <%- poll.voteCount %> vote(s)
+                </h6>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    <% } else { %>
+      <p class="text-muted text-center h3 py-5">
+        Apparently <%= profile.username %> doesn't like polls... <i class="far fa-frown"></i>
+      </p>
+    <% } %>
+  </section>
+</main>
+
+<%- include('includes/footer', { scripts: ['search'] }) %>
