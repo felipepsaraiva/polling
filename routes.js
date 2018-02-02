@@ -74,25 +74,21 @@ router.get('/user/:uname', function(req, res, next) {
 
       res.render('profile', { user: req.user, profile });
     } else {
-      next({
-        status: 404,
-        context: 'username',
-        value: uname
-      });
+      next({ status: 404 });
     }
   }).catch(next);
 });
 
 // Error Handler
 router.use(function(err, req, res, next) {
-  console.log(err);
   res.status(err.status || 500);
   switch (err.status) {
     case 404:
-      res.render('error-404', { user: req.user, context: err.context, value: err.value });
+      res.render('error-404', { user: req.user });
+      break;
 
     default:
-    res.render('error-500', { user: req.user });
+      res.render('error-500', { user: req.user });
   }
 });
 
