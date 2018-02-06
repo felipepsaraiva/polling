@@ -79,6 +79,25 @@ router.get('/user/:uname', function(req, res, next) {
   }).catch(next);
 });
 
+router.get('/poll/:aid', function(req, res, next) {
+  let id = common.decodeId(req.params.aid);
+  if (!id) return next({ status: 404 });
+
+  Poll.findById(id).populate('author').exec()
+    .then(function(poll) {
+      if (poll) {
+        poll.options.forEach((option) => option.aid = common.encodeId(option.id));
+        res.render('poll', {
+          user: req.user,
+          generateRandomColor: common.generateRandomColor,
+          poll
+        });
+      } else
+        next({ status: 404 });
+    }).catch(next);
+});
+
+
 // Error Handler
 router.use(function(err, req, res, next) {
   res.status(err.status || 500);
