@@ -97,16 +97,48 @@ router.get('/poll/:aid', function(req, res, next) {
     }).catch(next);
 });
 
+/**
+ * Query:
+ *  edit: AID - The id of the poll that will be edited, if not provided, indicates a new poll
+ */
+router.get('/poll', function(req, res, next) {
+  if (!req.user)
+    return res.redirect('/');
+
+  let id = common.decodeId(req.query.edit);
+  if (!id)
+    return res.render('poll-creation', { user: req.user });
+
+  Poll.findById(id).exec().then(function(poll) {
+    if (poll) {
+      if (poll.author.toString('hex') == req.user.id) {
+        poll.options.forEach((option) => option.aid = common.encodeId(option.id));
+        res.render('poll-creation', {
+          user: req.user,
+          poll
+        });
+      } else
+        next({ status: 403, asset: 'poll' });
+    } else
+      next({ status: 404 });
+  }).catch(next);
+});
+
 
 // Error Handler
 router.use(function(err, req, res, next) {
   res.status(err.status || 500);
   switch (err.status) {
+    case 403:
+      res.render('error-403', { user: req.user, asset: err.asset });
+      break;
+
     case 404:
       res.render('error-404', { user: req.user });
       break;
 
     default:
+      console.log(err);
       res.render('error-500', { user: req.user });
   }
 });

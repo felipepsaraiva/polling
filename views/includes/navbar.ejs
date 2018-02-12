@@ -16,6 +16,7 @@
               Hi, <%- user.username %>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/poll"><i class="fas fa-fw fa-plus"></i> New Poll</a>
               <a class="dropdown-item" href="/user/<%= user.username %>"><i class="fas fa-fw fa-chart-pie"></i> My Polls</a>
               <a class="dropdown-item" href="/settings"><i class="fas fa-fw fa-cogs"></i> Settings</a>
             </div>

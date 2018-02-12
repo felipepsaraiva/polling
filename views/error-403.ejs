@@ -1,0 +1,17 @@
+<%- include('includes/header') %>
+<%- include('includes/navbar', { user: user }) %>
+
+<main id="403-page" class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-sm-6 col-lg-4 my-5 text-center">
+      <h1>Forbidden</h1>
+      <p class="lead">You can't access this <%= locals.asset || 'page' %>... We have our <span class="font-weight-bold">extremely capacitated guards</span> watching every move you make!</p>
+    </div>
+
+    <div class="col-sm-6 col-lg-4 order-sm-first">
+      <img src="https://vignette.wikia.nocookie.net/disney/images/2/25/Clawhauser_Promo.png/revision/latest?cb=20160317131046" alt="Tiger Guard Cartoon (Clawhauser)" class="img-fluid">
+    </div>
+  </div>
+</main>
+
+<%- include('includes/footer') %>
