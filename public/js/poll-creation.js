@@ -16,7 +16,9 @@ $(function() {
 
 
   $('#add-option').click(function() {
-    $('#poll-options').append($('#new-option-model li').clone(true));
+    var newOption = $('#new-option-model li').clone(true);
+    $('#poll-options').append(newOption);
+    newOption.find('input').focus();
   });
 
   if (!$('#poll-options').children().length)
