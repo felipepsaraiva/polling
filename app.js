@@ -4,7 +4,6 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -37,7 +36,7 @@ app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'ejs');
 
 app.use(helmet());
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use('/assets', express.static(path.join(__dirname, 'public')));
