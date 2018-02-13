@@ -4,13 +4,17 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const helmet = require('helmet');
-const cors = require('cors');
 const jwt = require('jwt-simple');
 
 const passport = require('passport');
 require('./config/passport'); // Execute Passport's configuration code
+
+const compression = require('compression');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const favicon = require('serve-favicon');
 
 const express = require('express');
 const app = express();
@@ -35,6 +39,9 @@ mongoose.connection.on('error', function() {
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'ejs');
 
+app.use(compression());
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.png')))
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev'));
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
@@ -65,5 +72,5 @@ app.use('/api', cors(), api);
 app.use('/', webClientRoutes);
 
 app.listen(app.get('port'), function() {
-  console.log('App is running on port ' + app.get('port') + '...');
+  console.log('App is running on port ' + app.get('port') + ' in ' + process.env.NODE_ENV + ' mode...');
 });
