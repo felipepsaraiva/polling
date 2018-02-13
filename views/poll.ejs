@@ -1,0 +1,110 @@
+<%- include('includes/header', { title: 'Poll' }) %>
+<%- include('includes/navbar', { user: user }) %>
+
+<main id="page-poll">
+  <div class="banner-bkg">
+    <div class="banner text-warning">
+      <div class="container">
+        <h1 class="font-brand text-center display-3"><%= poll.name %></h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <div class="row text-center text-muted mb-md-5 lead">
+      <div class="col-sm text-sm-right">
+        Created by <a href="/user/<%= poll.author.username %>" class="text-warning"><%= poll.author.username %></a>
+      </div>
+
+      <div class="col-sm text-sm-left">
+        <%= poll.voteCount %> total vote(s)
+      </div>
+
+      <div class="col-md-auto text-center mt-1 mt-md-0">
+        <a href="javascript:;" id="twitter-share" class="btn btn-sm btn-info" data-name="<%= poll.name %>">
+          <i class="fab fa-twitter"></i> Tweet
+        </a>
+
+        <% if (locals.user && user.id === poll.author.id) { %>
+          <a href="/poll?edit=<%= poll.aid %>" class="btn btn-sm btn-warning">
+            <i class="far fa-edit"></i> Edit
+          </a>
+        <% } %>
+      </div>
+    </div>
+
+    <hr class="d-md-none my-4">
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <form>
+          <input type="hidden" name="pollId" value="<%= poll.aid %>">
+
+          <ul class="fa-ul lead">
+            <% for (let option of poll.options) { %>
+              <li>
+                <input type="radio" name="option" id="option-<%= option.aid %>" value="<%= option.aid %>" class="d-none">
+                <label for="option-<%= option.aid %>">
+                  <span class="fa-li"><i class="far fa-circle"></i></span>
+                  <%= option.description %>
+                  <small class="text-muted">(<%= option.votes %> votes)</small>
+                </label>
+              </li>
+            <% } %>
+
+            <% if (poll.allowNewOptions && locals.user) { %>
+              <li>
+                <input type="radio" name="option" id="option-new" value="new" class="d-none">
+                <label for="option-new" class="d-block">
+                  <span class="fa-li"><i class="far fa-circle"></i></span>
+                  <input type="text" id="option-input" class="form-control form-control-sm" placeholder="Other">
+                </label>
+              </li>
+            <% } %>
+          </ul>
+
+          <div class="alert alert-danger d-none" role="alert"></div>
+
+          <button type="submit" class="d-block btn btn-warning mx-auto">
+            <i class="fas fa-check"></i> Vote
+          </button>
+
+          <button type="button" class="d-none btn btn-warning mx-auto" disabled>
+            <i class="fas fa-spinner fa-pulse"></i> Voting...
+          </button>
+        </form>
+      </div>
+
+      <div class="col-md-6">
+        <hr class="d-md-none my-4">
+        <div class="chart-container">
+          <canvas id="chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script>
+  var myChart = new Chart('chart', {
+    type: 'pie',
+    data: {
+      labels: [<%- poll.options.map(option => JSON.stringify(option.description)) %>],
+      datasets: [{
+        label: '# of Votes',
+        data: [<%- poll.options.map(option => option.votes) %>],
+        backgroundColor: [
+          <%- poll.options.map(option =>
+            option.votes ? JSON.stringify(generateRandomColor()) : 'Chart.defaults.global.defaultColor'
+          ) %>
+        ]
+      }],
+    },
+    options: {
+      maintainAspectRatio: false
+    }
+  });
+</script>
+
+<%- include('includes/footer', { scripts: ['poll'] }) %>

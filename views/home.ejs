@@ -1,0 +1,117 @@
+<%- include('includes/header') %>
+<%- include('includes/navbar', { user: user }) %>
+
+<main id="page-home">
+  <div class="banner-bkg">
+    <div class="banner text-warning">
+      <div class="container">
+        <h1 class="font-brand text-center">
+          <i class="far fa-comments" aria-hidden="true"></i>
+          Polling
+        </h1>
+
+        <p class="text-center">
+          <% if (locals.user) { %>
+            <a href="/search" class="btn btn-warning btn-lg">
+              <i class="fas fa-search"></i> Find Polls
+            </a>
+          <% } else { %>
+            <a href="/register" class="btn btn-warning btn-lg">
+              <i class="fas fa-user-plus"></i> Join Now
+            </a>
+          <% } %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <section id="features">
+      <div class="row justify-content-center text-center">
+        <div class="col-sm col-lg-3">
+          <p><i class="fas fa-plus-square fa-3x"></i></p>
+          <h4>Create Polls</h4>
+          <p>Create your own polls with any number of options and use the result for fun or even statistics.</p>
+        </div>
+
+        <div class="col-sm col-lg-3 offset-lg-1">
+          <p><i class="fas fa-search fa-3x"></i></p>
+          <h4>Search and Vote</h4>
+          <p>Vote on public polls and help others so they can answer their lifetime questions.</p>
+        </div>
+
+        <div class="col-sm col-lg-3 offset-lg-1">
+          <p><i class="fas fa-share-alt fa-3x"></i></p>
+          <h4>Share</h4>
+          <p>Share your polls so everyone you know can vote and help you.</p>
+        </div>
+      </div>
+    </section>
+
+    <% if (locals.polls) { %>
+      <hr>
+
+      <section id="polls">
+        <div class="row text-center">
+          <div class="col-md">
+            <h2>Popular Polls</h2>
+
+            <% if (polls.popular.length) { %>
+              <div class="row">
+                <% for (let poll of polls.popular) { %>
+                  <div class="col-sm-6 col-md-12 col-lg-6 my-2">
+                    <div class="card">
+                      <a href="/poll/<%- poll.aid %>"></a>
+                      <div class="card-body">
+                        <h5 class="card-title"><%- poll.name %></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                          <%- poll.voteCount %> vote(s) &middot; <%- poll.author.username %>
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else { %>
+              <p class="lead text-muted">No popular polls at the moment... <i class="far fa-frown"></i></p>
+            <% } %>
+
+            <p class="text-right mt-1"><a href="/search" class="btn btn-sm btn-warning">
+              <i class="fas fa-plus"></i> See more...
+            </a></p>
+          </div>
+
+          <div class="col-md offset-md-1">
+            <h2>Recent Polls</h2>
+
+            <% if (polls.popular.length) { %>
+              <div class="row">
+                <% for (let poll of polls.recent) { %>
+                  <div class="col-sm-6 col-md-12 col-lg-6 my-2">
+                    <div class="card">
+                      <a href="/poll/<%- poll.aid %>"></a>
+                      <div class="card-body">
+                        <h5 class="card-title"><%- poll.name %></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                          <%- poll.voteCount %> vote(s) &middot; <%- poll.author.username %>
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else { %>
+              <p class="lead text-muted">No recent polls at the moment... <i class="far fa-frown"></i></p>
+            <% } %>
+
+            <p class="text-right mt-1"><a href="/search?sort=recent" class="btn btn-sm btn-warning">
+              <i class="fas fa-plus"></i> See more...
+            </a></p>
+          </div>
+        </div>
+      </section>
+    <% } %>
+  </div>
+</main>
+
+<%- include('includes/footer') %>

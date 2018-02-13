@@ -131,7 +131,7 @@ module.exports.self.polls = function(req, res, next) {
        error: false,
        message: 'Found ' + data.results.length + ' result(s)',
        total: data.total,
-       users: data.results.map((result) => result.getPublic())
+       users: data.results.map((result) => result.getPublic(true))
      });
    }).catch(next);
  };

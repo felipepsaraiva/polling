@@ -96,3 +96,13 @@ module.exports.extractErrors = function(errors, msgs = []) {
 module.exports.escapeRegex = function(str) {
   return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
+
+/**
+ * generateRandomColor - Generate a random hex color
+ */
+module.exports.generateRandomColor = function(opaque) {
+  const r = Math.floor(Math.random() * 200);
+  const g = Math.floor(Math.random() * 200);
+  const b = Math.floor(Math.random() * 200);
+  return `rgba(${r}, ${g}, ${b}, ${opaque ? '1' : '0.5'})`;
+};

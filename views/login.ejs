@@ -1,0 +1,48 @@
+<%- include('includes/header', { title: 'Sign in' }) %>
+
+<main id="page-login" class="p-0">
+  <div class="container">
+    <div class="row align-items-center justify-content-center m-0">
+      <div class="col-sm-7 col-md-5 col-lg-4 text-center my-5">
+        <a href="/" class="no-decoration-link">
+          <h1 class="font-brand text-warning mb-2">
+            <i class="far fa-comments" aria-hidden="true"></i>
+            Polling
+          </h1>
+        </a>
+
+        <form>
+          <div class="form-group mb-1" id="username">
+            <label for="username-input" class="sr-only">Username</label>
+            <input type="text" id="username-input" class="form-control" placeholder="Username" autofocus>
+          </div>
+
+          <div class="form-group" id="password">
+            <label for="password-input" class="sr-only">Password</label>
+            <input type="password" id="password-input" class="form-control" placeholder="Password">
+            <p id="error-message" class="d-none text-danger text-right"></p>
+          </div>
+
+          <button type="submit" class="btn btn-warning btn-block">
+            <i class="fas fa-sign-in-alt"></i> Sign in
+          </button>
+
+          <button type="button" class="d-none btn btn-warning btn-block" disabled>
+            <i class="fas fa-spinner fa-pulse"></i> Signing in...
+          </button>
+
+          <hr class="my-3">
+
+          <div class="text-center">
+            <p class="mb-1">Don't have an account?</p>
+            <a href="/register" class="btn btn-dark btn-block">
+              <i class="fas fa-user-plus"></i> Sign up
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('includes/footer', { scripts: ['login'], bodyFooter: false }) %>

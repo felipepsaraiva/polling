@@ -1,0 +1,71 @@
+<%- include('includes/header', { title: 'Search' }) %>
+<%- include('includes/navbar', { user: user }) %>
+
+<main id="page-search" class="container py-5">
+  <div class="row justify-content-center my-md-3 my-lg-5">
+    <div class="col-sm-6 col-md-4">
+      <div class="form-group">
+        <label for="type" class="lead font-weight-bold">Search for:</label>
+        <select class="form-control custom-select" id="type">
+          <option value="poll" <%= ( query.type == 'user' ? '' : 'selected') %>>Polls</option>
+          <option value="user" <%= ( query.type == 'user' ? 'selected' : '') %>>Users</option>
+        </select>
+      </div>
+      <input type="hidden" id="submit" value="<%- query.submit %>">
+
+      <hr class="my-4">
+
+      <form id="search-poll" class="<%= ( query.type == 'user' ? 'd-none' : '') %>">
+        <div class="form-group">
+          <label for="sort" class="sr-only">Sort:</label>
+          <select class="form-control custom-select" id="sort">
+            <option value="popular" <%=( query.sort=='recent' ? '' : 'selected') %>>Popular</option>
+            <option value="recent" <%=( query.sort=='recent' ? 'selected' : '') %>>Recent</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pollq" class="sr-only">Search term:</label>
+          <input type="text" id="pollq" class="form-control" value="<%- query.pq %>" placeholder="Search Term">
+        </div>
+
+        <button type="submit" class="btn btn-warning btn-block">
+          <i class="fas fa-search"></i> Search Polls
+        </button>
+      </form>
+
+      <form id="search-user" class="<%= ( query.type == 'user' ? '' : 'd-none') %>">
+        <div class="form-group">
+          <label for="userq" class="sr-only">Username:</label>
+          <input type="text" id="userq" class="form-control" value="<%- query.uq %>" placeholder="Username">
+        </div>
+
+        <button type="submit" class="btn btn-warning btn-block">
+          <i class="fas fa-search"></i> Search Users
+        </button>
+      </form>
+    </div>
+
+    <div id="results" class="col-sm-6 col-md-8 mt-5 mt-sm-0">
+      <p id="loading" class="d-none text-center text-muted">
+        <i class="fas fa-fw fa-spinner fa-pulse fa-3x"></i> <span class="sr-only">Loading...</span>
+      </p>
+
+      <p id="error" class="d-none text-center text-muted h3">
+        <i class="fas fa-exclamation-triangle"></i> An error occured, please try again...
+      </p>
+
+      <p id="no-results" class="d-none text-center text-muted h3">
+        No results were found... <i class="far fa-frown"></i>
+      </p>
+
+      <div id="cards" class="d-none row"></div>
+
+      <nav aria-label="Search results pages" class="d-none mt-3">
+        <ul class="pagination justify-content-center"></ul>
+      </nav>
+    </div>
+  </div>
+</main>
+
+<%- include('includes/footer', { scripts: ['search'] }) %>

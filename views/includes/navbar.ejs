@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand font-brand" style="font-size: 28px; margin: -10px 0; padding: 0 10px;" href="/">
+      <i class="far fa-comments" aria-hidden="true"></i>
+      Polling
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsiveContent" aria-controls="navbarResponsiveContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarResponsiveContent">
+      <ul class="navbar-nav ml-auto">
+        <% if (locals.user) { %>
+          <li class="nav-item dropdown mx-1 my-1 my-sm-0">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Hi, <%- user.username %>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/poll"><i class="fas fa-fw fa-plus"></i> New Poll</a>
+              <a class="dropdown-item" href="/user/<%= user.username %>"><i class="fas fa-fw fa-chart-pie"></i> My Polls</a>
+              <a class="dropdown-item" href="/settings"><i class="fas fa-fw fa-cogs"></i> Settings</a>
+            </div>
+          </li>
+
+          <!-- Search link for sm-up devices -->
+          <li class="d-none d-sm-flex nav-item">
+            <a class="nav-link text-warning mx-1" href="/search">
+              <i class="fas fa-search"></i><span class="sr-only">Search</span>
+            </a>
+          </li>
+
+          <!-- Search button for xs devices -->
+          <li class="d-sm-none nav-item">
+            <a class="btn btn-outline-warning m-1 d-block" href="/search">
+              <i class="fas fa-search"></i> Search
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="btn btn-outline-warning mx-1 my-1 my-sm-0 d-block d-sm-flex" href="javascript: Cookies.remove('token'); window.location = '/';">Sign out</a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="btn btn-warning mx-1 my-1 my-sm-0 d-block d-sm-flex" href="/register">Sign up</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="btn btn-outline-light mx-1 my-1 my-sm-0 d-block d-sm-flex" href="/login">Sign in</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
