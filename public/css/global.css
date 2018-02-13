@@ -65,3 +65,5 @@ main { min-height: 90vh }
   overflow: hidden;
   resize: none;
 }
+
+#page-poll-creation .vote-count { margin-top: -10px; }

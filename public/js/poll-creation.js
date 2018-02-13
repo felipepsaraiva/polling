@@ -1,6 +1,7 @@
 $(function() {
   var removedOptions = []; // Options that were removed
   var request; // Ajax request
+  var deleteWarning = false; // Indicates if the warning has been shown before deleting
 
   $('#poll-name').autoResize(); // Plugin: https://github.com/Alex1990/autoresize-textarea
 
@@ -27,7 +28,7 @@ $(function() {
     if (request) return false;
 
     var pollId = $('#poll-id').val();
-    var submitButtons = $('.js-save');
+    var submitButtons = $('#save-action button');
 
     var newOptions = [];
     $('.js-new-option').each(function(index, element) {
@@ -49,8 +50,7 @@ $(function() {
         data.options.delete = removedOptions;
     }
 
-    console.log(data);
-    submitButtons.toggleClass('d-none d-block');
+    submitButtons.toggleClass('d-none');
     $('#poll-error, #poll-name-error, #poll-options-error').empty().addClass('d-none');
 
     request = $.ajax({
@@ -65,8 +65,7 @@ $(function() {
       window.location = '/poll/' + response.poll.id;
     }).fail(function(xhr, status) {
       request = null;
-      submitButtons.toggleClass('d-none d-block');
-      console.log(xhr.responseJSON);
+      submitButtons.toggleClass('d-none');
 
       if (xhr.responseJSON.errorList) {
         xhr.responseJSON.errorList.forEach(function(error) {
@@ -81,6 +80,40 @@ $(function() {
           $(id).removeClass('d-none');
         });
       }
+    });
+  });
+
+  $('#delete-action button').click(function() {
+    if (request) return false;
+    if (!deleteWarning) {
+      $('#delete-action p').removeClass('d-none');
+      deleteWarning = true;
+      return;
+    }
+
+    var pollId = $('#poll-id').val();
+    var deleteButtons = $('#delete-action button');
+    deleteButtons.toggleClass('d-none');
+
+    request = $.ajax({
+      type: 'DELETE',
+      url: '/api/poll/' + pollId,
+      headers: { 'Access-Header': Cookies.get('token') }
+    });
+
+    request.done(function (response) {
+      deleteButtons.toggleClass('d-none');
+      var msg = $('#delete-action p');
+      msg.toggleClass('text-danger text-success small');
+      msg.text(response.message);
+
+      setTimeout(function () {
+        window.location = '/';
+      }, 1000);
+    }).fail(function (xhr, status) {
+      request = null;
+      deleteButtons.toggleClass('d-none');
+      $('#delete-action p').text(xhr.responseJSON.message);
     });
   });
 });

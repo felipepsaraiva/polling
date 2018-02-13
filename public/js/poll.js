@@ -4,8 +4,15 @@ $(function() {
   var request; // Represents the XHR request (used on submit)
   $('form')[0].reset(); // Remove any option selected before a refresh
 
+  $('#twitter-share').click(function() {
+    var url = 'https://twitter.com/intent/tweet?'
+      + 'text=Vote on "' + $('#twitter-share').data('name') + '"'
+      + '&url=' + window.location
+    window.open(url, "_blank");
+  });
+
   $('#option-input').on('focus', function() {
-    $('#option-new + label').click()
+    $('#option-new + label').click();
   });
 
   $('input[name=option]').on('change', function(e) {
@@ -20,16 +27,13 @@ $(function() {
 
   $('form').submit(function(e) {
     e.preventDefault();
-    // Check if a request is already happening
-    if (request)
-      return false;
+    if (request) return false;
 
     $('.alert-danger').addClass('d-none');
     var data = $('form').serializeArray().reduce((data, current) => {
       data[current.name] = current.value;
       return data;
     }, {});
-    console.log(data);
 
     // Check if an option is selected
     if (!data.option) {

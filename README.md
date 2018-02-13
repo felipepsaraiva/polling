@@ -7,7 +7,7 @@ Polling is a Web App where you can vote on all kinds of polls and create your ow
 ### User Stories
 
 * :ballot_box_with_check: As an authenticated user, I can keep my polls and come back later to access them.
-* :black_square_button: As an authenticated user, I can share my polls with my friends.
+* :ballot_box_with_check: As an authenticated user, I can share my polls with my friends.
 * :ballot_box_with_check: As an authenticated user, I can see the aggregate results of my polls.
 * :ballot_box_with_check: As an authenticated user, I can delete polls that I decide I don't want anymore.
 * :ballot_box_with_check: As an authenticated user, I can create a poll with any number of possible items.

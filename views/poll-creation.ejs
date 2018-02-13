@@ -14,19 +14,6 @@
 
         <div class="row mt-5">
           <div class="col-sm">
-            <div id="poll-error" class="d-none alert alert-danger text-center" role="alert"></div>
-
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="allowNewOptions" <%= locals.poll ? (poll.allowNewOptions && 'checked') : 'checked' %>>
-              <label class="custom-control-label" for="allowNewOptions">Allow registered users to create and vote on new options</label>
-            </div>
-          </div>
-
-          <div class="col-sm-1">
-            <hr class="d-sm-none my-4">
-          </div>
-
-          <div class="col-sm">
             <p class="h3 text-center">Options</p>
 
             <div id="poll-options-error" class="d-none alert alert-danger text-center" role="alert"></div>
@@ -47,6 +34,8 @@
                         </button>
                       </div>
                     </div>
+
+                    <div class="text-muted vote-count"><small><%= option.votes %> vote(s)</small></div>
                   </li>
                 <% } %>
               <% } %>
@@ -71,19 +60,49 @@
             </div>
 
             <button type="button" id="add-option" class="btn btn-sm btn-dark d-block ml-auto">
-              <i class="fas fa-plus" aria-hidden="true"></i>
-              Add Option
+              <i class="fas fa-plus" aria-hidden="true"></i> Add Option
             </button>
           </div>
+
+          <div class="col-sm-1">
+            <hr class="d-sm-none my-4">
+          </div>
+
+          <div class="col-sm order-sm-first">
+            <div id="poll-error" class="d-none alert alert-danger text-center" role="alert"></div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="allowNewOptions" <%= locals.poll ? (poll.allowNewOptions && 'checked') : 'checked' %>>
+              <label class="custom-control-label" for="allowNewOptions">Allow registered users to create and vote on new options</label>
+            </div>
+
+            <div id="save-action" class="mt-5">
+              <button type="submit" class="btn btn-block btn-warning">
+                <i class="fas fa-check" aria-hidden="true"></i> Save Poll
+              </button>
+
+              <button type="button" class="d-none btn btn-block btn-warning" disabled>
+                <i class="fas fa-spinner fa-pulse" aria-hidden="true"></i> Saving...
+              </button>
+            </div>
+
+            <% if (locals.poll) { %>
+              <div id="delete-action" class="mt-2">
+                <button type="button" class="btn btn-block btn-danger">
+                  <i class="fas fa-trash-alt" aria-hidden="true"></i> Delete Poll
+                </button>
+
+                <button type="button" class="d-none btn btn-block btn-danger" disabled>
+                  <i class="fas fa-spinner fa-pulse" aria-hidden="true"></i> Deleting...
+                </button>
+
+                <p class="d-none text-right small text-danger font-weight-bold">
+                  This poll will be deleted and this can not be undone. Click again to confirm.
+                </p>
+              </div>
+            <% } %>
+          </div>
         </div>
-
-        <button type="submit" class="btn btn-lg btn-warning d-block mx-auto mt-5 js-save">
-          <i class="fas fa-check" aria-hidden="true"></i> Save Poll
-        </button>
-
-        <button type="button" class="btn btn-lg btn-warning d-none mx-auto mt-5 js-save" disabled>
-          <i class="fas fa-spinner fa-pulse" aria-hidden="true"></i> Saving...
-        </button>
       </div>
     </div>
   </form>

@@ -19,6 +19,18 @@
       <div class="col-sm text-sm-left">
         <%= poll.voteCount %> total vote(s)
       </div>
+
+      <div class="col-md-auto text-center">
+        <a href="javascript:;" id="twitter-share" class="btn btn-sm btn-info" data-name="<%= poll.name %>">
+          <i class="fab fa-twitter"></i> Tweet
+        </a>
+
+        <% if (locals.user && user.id === poll.author.id) { %>
+          <a href="/poll?edit=<%= poll.aid %>" class="btn btn-sm btn-warning">
+            <i class="far fa-edit"></i> Edit
+          </a>
+        <% } %>
+      </div>
     </div>
 
     <hr class="d-md-none my-4">
