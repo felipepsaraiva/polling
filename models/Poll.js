@@ -27,8 +27,8 @@ const PollSchema = new Schema({
       votes: { type: Number, default: 0 }
     }],
     required: [true, 'You must create at least one option']
-  },
-}, { collection: 'polling.polls' });
+  }
+}, { collection: (process.env.DB_ENV === 'development' ? 'polling.dev.polls' : 'polling.polls') });
 
 // Alternative ID
 PollSchema.virtual('aid').get(function() {

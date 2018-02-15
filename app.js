@@ -1,4 +1,12 @@
 'use strict';
+
+/**
+ * Environment Variables:
+ *  NODE_ENV: 'production' | 'development'
+ *  DB_ENV: 'production' | 'development' (Access collections with dev prefix)
+ *  MONGO_URI: URI to access the database
+ *  SECRET: JWT Secret
+ */
 require('dotenv').config();
 
 const path = require('path');
@@ -72,5 +80,8 @@ app.use('/api', cors(), api);
 app.use('/', webClientRoutes);
 
 app.listen(app.get('port'), function() {
-  console.log('App is running on port ' + app.get('port') + ' in ' + process.env.NODE_ENV + ' mode...');
+  console.log(`Node Environment: ${process.env.NODE_ENV}`);
+  console.log(`Database Environment: ${process.env.DB_ENV}`);
+  console.log(`Port: ${app.get('port')}`);
+  console.log('App is running...\n');
 });

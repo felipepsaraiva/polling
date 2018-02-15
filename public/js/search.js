@@ -80,7 +80,7 @@ function renderPolls(response) {
       + '<div class="card-body">'
       + '<h5 class="card-title">' + result.name + '</h5>'
       + '<h6 class="card-subtitle mb-2 text-muted">'
-      + result.voteCount + ' vote(s) &middot; ' + result.author.username
+      + result.voteCount + ' vote(s) &middot; ' + result.author.name
       + '</h6></div></div></div>'
     );
   }

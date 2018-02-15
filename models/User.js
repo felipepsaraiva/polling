@@ -25,7 +25,7 @@ const UserSchema = new Schema({
     minlength: [6, 'Password is too short (Min 6 characters)']
   },
   salt: { type: String, default: common.generateRandomString }
-}, { collection: 'polling.users' });
+}, { collection: (process.env.DB_ENV === 'development' ? 'polling.dev.users' : 'polling.users') });
 
 // Alternative ID
 UserSchema.virtual('aid').get(function() {
