@@ -22,32 +22,33 @@
             </div>
           </li>
 
-          <!-- Search link for sm-up devices -->
-          <li class="d-none d-sm-flex nav-item">
-            <a class="nav-link text-warning mx-1" href="/search">
-              <i class="fas fa-search"></i><span class="sr-only">Search</span>
-            </a>
-          </li>
-
-          <!-- Search button for xs devices -->
-          <li class="d-sm-none nav-item">
-            <a class="btn btn-outline-warning m-1 d-block" href="/search">
-              <i class="fas fa-search"></i> Search
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="btn btn-outline-warning mx-1 my-1 my-sm-0 d-block d-sm-flex" href="javascript: Cookies.remove('token'); window.location = '/';">Sign out</a>
+          <li class="nav-item mx-1 my-1 my-sm-0">
+            <a class="btn btn-outline-warning d-block d-sm-flex" href="javascript: Cookies.remove('token'); window.location = '/';">Sign out</a>
           </li>
         <% } else { %>
-          <li class="nav-item">
-            <a class="btn btn-warning mx-1 my-1 my-sm-0 d-block d-sm-flex" href="/register">Sign up</a>
+          <li class="nav-item mx-1 mt-2 mb-1 my-sm-0">
+            <a class="btn btn-warning d-block d-sm-flex" href="/register">Sign up</a>
           </li>
 
-          <li class="nav-item">
-            <a class="btn btn-outline-light mx-1 my-1 my-sm-0 d-block d-sm-flex" href="/login">Sign in</a>
+          <li class="nav-item mx-1 my-1 my-sm-0">
+            <a class="btn btn-outline-light d-block d-sm-flex" href="/login">Sign in</a>
           </li>
         <% } %>
+
+        <!-- Search link for sm-up devices -->
+        <li class="d-none d-sm-flex nav-item border-secondary ml-3" style="border-left: solid 1px">
+          <a class="nav-link text-warning mx-2" href="/search">
+            <i class="fas fa-lg fa-search"></i>
+            <span class="sr-only">Search</span>
+          </a>
+        </li>
+
+        <!-- Search button for xs devices -->
+        <li class="d-sm-none nav-item border-secondary mx-1 mt-1" style="border-top: solid 1px">
+          <a class="btn btn-outline-warning mt-2 d-block" href="/search">
+            <i class="fas fa-search"></i> Search
+          </a>
+        </li>
       </ul>
     </div>
   </div>

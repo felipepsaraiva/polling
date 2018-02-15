@@ -18,14 +18,14 @@ $(function() {
         headers: { 'Access-Header': Cookies.get('token') },
         contentType: 'application/json',
         data: JSON.stringify({
-          email: $('#email input').val(),
+          name: $('#name input').val(),
           username: $('#username input').val()
         })
       }).always(function() {
         delete requests['update-info'];
         $('#user-information button').toggleClass('d-none d-block');
       }).done(function(response) {
-        $('#email').val(response.user.email);
+        $('#name').val(response.user.name);
         $('#username').val(response.user.username);
         $('#user-information .alert-success').removeClass('d-none');
       }).fail(function(xhr, status) {

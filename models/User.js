@@ -5,10 +5,11 @@ const Schema = mongoose.Schema;
 const common = require('../config/common');
 
 const UserSchema = new Schema({
-  email: {
+  name: {
     type: String,
-    required: [true, 'Email is required'],
-    trim: true
+    required: [true, 'Name is required'],
+    trim: true,
+    maxlength: [70, 'Name is too long (Max 70 characters)']
   },
   username: {
     type: String,
@@ -47,25 +48,9 @@ UserSchema.pre('save', function(next) {
 /**
  * Custom Validators
  */
-UserSchema.path('email').validate(function(value) {
-  return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g.test(value);
-}, 'Email is invalid');
-
 UserSchema.path('username').validate(function(value) {
   return /^[a-zA-Z]{1}[\w.]*$/g.test(value);
 }, 'Start username with a letter and use only alphanumeric characters, underscores or dots');
-
-UserSchema.path('email').validate(function(value) {
-  if (this.isNew || this.isModified('email'))
-    return new Promise((resolve, reject) => {
-      this.model('User').count({ email: value }, function(err, count) {
-        if (err) return reject(err);
-        resolve(!count);
-      });
-    });
-
-  return true;
-}, 'Email already exists');
 
 UserSchema.path('username').validate(function(value) {
   if (this.isNew || this.isModified('username'))
@@ -87,7 +72,7 @@ UserSchema.methods.validPassword = function(password) {
 };
 
 UserSchema.methods.getPublic = function(includeAid, includePolls) {
-  let result = common.getProperties(this, ['username', 'email']);
+  let result = common.getProperties(this, ['username', 'name']);
 
   if (includeAid)
     result.id = this.aid;

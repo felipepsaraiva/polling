@@ -20,12 +20,12 @@ module.exports.self.read = function(req, res, next) {
 
 /**
  * Body:
- *  email: String (Optional)
+ *  name: String (Optional)
  *  username: String (Optional)
  */
 module.exports.self.update = function(req, res, next) {
-  if (req.body.email)
-    req.user.email = req.body.email;
+  if (req.body.name)
+    req.user.name = req.body.name;
 
   if (req.body.username)
     req.user.username = req.body.username;
@@ -118,8 +118,10 @@ module.exports.self.polls = function(req, res, next) {
      limit = Math.floor(req.query.limit) || 10,
      skip = (Math.floor(req.query.offset) || 0) * limit;
 
-   if (req.query.q)
-     condition = { username: new RegExp(common.escapeRegex(req.query.q), 'i') };
+   if (req.query.q) {
+     const regex = new RegExp(common.escapeRegex(req.query.q), 'i');
+     condition = { $or: [{ name: regex }, { username: regex }] };
+   }
 
    co(function*() {
      return yield {
@@ -138,13 +140,13 @@ module.exports.self.polls = function(req, res, next) {
 
 /**
  * Body:
- *  email: String
+ *  name: String
  *  username: String
  *  password: String
  */
 module.exports.create = function(req, res, next) {
   let user = new User({
-    email: req.body.email,
+    name: req.body.name,
     username: req.body.username,
     password: req.body.password
   });

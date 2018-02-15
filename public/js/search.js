@@ -97,7 +97,8 @@ function renderUsers(response) {
       + '<div class="card">'
       + '<a href="/user/' + result.username + '"></a>'
       + '<div class="card-body">'
-      + '<h4 class="card-title text-center m-0">' + result.username + '</h4>'
+      + '<h4 class="card-title text-center m-0">' + result.name + '</h4>'
+      + '<h5 class="text-muted text-center m-0">@' + result.username + '</h5>'
       + '</div></div></div>'
     );
   }

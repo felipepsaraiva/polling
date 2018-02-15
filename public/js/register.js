@@ -10,7 +10,7 @@ $(function() {
     $('.form-group input').removeClass('is-valid is-invalid');
 
     var data = {
-      email: $('#email input').val(),
+      name: $('#name input').val(),
       username: $('#username input').val(),
       password: $('#password input').val()
     };

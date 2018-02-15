@@ -2,7 +2,10 @@
 <%- include('includes/navbar', { user: user }) %>
 
 <main id="page-profile" class="container py-5">
-  <h1 class="my-4 text-center text-sm-left"><strong><%= profile.username %></strong>'s polls</h1>
+  <h1 class="my-4 text-center text-sm-left">
+    <strong><%= profile.name %></strong>
+    <small class="ml-2 text-muted">@<%= profile.username %></small>
+  </h1>
 
   <section id="polls">
     <% if (profile.polls && profile.polls.length) { %>
@@ -23,7 +26,7 @@
       </div>
     <% } else { %>
       <p class="text-muted text-center h3 py-5">
-        Apparently <%= profile.username %> doesn't like polls... <i class="far fa-frown"></i>
+        Apparently <%= profile.name %> doesn't like polls... <i class="far fa-frown"></i>
       </p>
     <% } %>
   </section>
