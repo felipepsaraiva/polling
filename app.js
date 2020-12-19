@@ -35,7 +35,11 @@ const User = require('./models/User');
  * Connect to MongoDB
 */
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGO_URI, { useMongoClient: true });
+mongoose.connect(process.env.MONGO_URI, {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 mongoose.connection.on('error', function() {
   console.error('Unable to connect to MongoDB');
   process.exit();
